@@ -46,7 +46,8 @@
             "never"
         ],
         "no-trailing-spaces": "error",
-        "no-unneeded-ternary": "error"
+        "no-unneeded-ternary": "error",
+        "space-before-blocks": "error"
     },
     "env": {
         "browser": true,
@@ -55,20 +56,19 @@
     "extends": "eslint:recommended",
     "globals": {
         "jQuery": true,
-        "Bacon": true,
         "Enumerable": true,
-        "Bloodhound": true,
-        "maquette": true,
         "moment": true,
+        "ko": true,
         "_": true,
         "require": true,
         "define": true,
-        //"vdom": true,
         "jasmine": true,
         "describe": true,
         "beforeEach": true,
         "it": true,
         "expect": true,
-        "rm": true
+        "cdays16": true,
+        "module": true,
+        "__dirname": true
     }
 }

@@ -5,3 +5,4 @@ bower_components/*
 .vscode/*
 obj/*.*
 bin/*.*
+*.min.js

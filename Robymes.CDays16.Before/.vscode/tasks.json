@@ -18,6 +18,14 @@
 			"taskName": "copyRefs",
 			"isBuildCommand": true,
 			"showOutput": "always"
+		}, {
+			"taskName": "buildDebug",
+			"isBuildCommand": true,
+			"showOutput": "always"
+		}, {
+			"taskName": "buidRelease",
+			"isBuildCommand": true,
+			"showOutput": "always"
 		}
 	]
 }

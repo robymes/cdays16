@@ -2,10 +2,9 @@ var gulp = require("gulp"),
     concat = require("gulp-concat"),
     eslint = require("gulp-eslint"),
     uglify = require("gulp-uglify"),
+    sourcemaps = require("gulp-sourcemaps"),
     KarmaServer = require("karma").Server,
-    //rename = require("gulp-rename"),
     bowerMain = require("bower-main"),
-    //filter = require("gulp-filter"),
     del = require("del"),
     bowerMainJavaScriptFiles = bowerMain("js", "min.js"),
     bowerMainCssFiles = bowerMain("css", "min.css"),
@@ -20,36 +19,26 @@ var gulp = require("gulp"),
             "sln/bin/release/js/bootstrap.min.js"
         ],
         src: [
-            "sln/src/Common.js",
-            "sln/src/ApiService.js",
-            "sln/src/Orchestrator.js",
-            "sln/src/NewTodoItem.js",
-            "sln/src/NewTodoItemView.js",
-            "sln/src/TodoList.js",
-            "sln/src/TodoListTableBuilder.js",
-            "sln/src/TodoListView.js",
+            "sln/src/ToDoListViewModel.js",
             "sln/src/App.js"
         ],
         testSrc: [
-            "sln/src/Common.js",
-            "sln/src/NewTodoItem.js",
-            "sln/src/Orchestrator.js",
-            "sln/src/TodoList.js"
+            "sln/src/ToDoListViewModel.js"
         ],
         testSrcDebug: [
-            "sln/obj/debug/js/testDebug.js"
+            "tests/debug/js/testDebug.js"
         ],
         testSrcRelease: [
-            "sln/obj/release/js/testRelease.min.js"
+            "tests/release/js/testRelease.min.js"
         ],
         specs: [
-            "sln/tests/*_Specs.js"
+            "tests/*_Specs.js"
         ],
-        debug: [
-            "sln/bin/debug/js/mytodo.js"
+        srcDebug: [
+            "sln/scripts/mytodo.js"
         ],
-        release: [
-            "sln/bin/release/js/mytodo.min.js"
+        srcRelease: [
+            "sln/scripts/mytodo.min.js"
         ]
     };
 
@@ -95,23 +84,28 @@ gulp.task("clean", function(callback) {
 
 gulp.task("copyRefs", ["clean", "copyJs", "copyCss", "copyFonts"]);
 
+gulp.task("checkLinter", function() {
+    return gulp.src(paths.src)
+        .pipe(eslint(paths.eslintrc))
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
+        .on("error", function(error) {
+            console.error(String(error));
+        });
+});
+
 //NOTA: vengono testati solo i sorgenti NON legati alla UI (HTML DOM)
 //per testare tutta la codebase è necessario condurre test di page automation
 
-gulp.task("prepareTestsDebug", function() {
+gulp.task("prepareTestsDebug", ["checkLinter"], function() {
     return gulp.src(paths.testSrc)
         .pipe(concat("testDebug.js"))
-        .pipe(gulp.dest("sln/obj/debug/js"));
+        .pipe(gulp.dest("tests/debug/js"));
 });
 
 gulp.task("testsDebug", ["prepareTestsDebug"], function(done) {
-    /*return gulp.src(paths.libs.concat(paths.libs, paths.testSrcDebug, paths.specs))
-        .pipe(karma({
-            configFile: "karma.debug.js",
-            action: "run"
-        }));*/
     new KarmaServer({
-        configFile: "/karma.debug.js",
+        configFile: __dirname + "/karma.debug.js",
         singleRun: true
     }, done)
     .start();
@@ -122,33 +116,22 @@ gulp.task("testsDebug", ["prepareTestsDebug"], function(done) {
 
 gulp.task("debug", function() {
     return gulp.src(paths.src)
-        .pipe(eslint(paths.eslintrc))
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError())
-        .on("error", function(error) {
-            console.error(String(error));
-        })
         .pipe(concat("mytodo.js"))
-        .pipe(gulp.dest("sln/bin/debug/js"));
+        .pipe(gulp.dest("sln/scripts"));
 });
 
 gulp.task("buildDebug", ["testsDebug", "debug"]);
 
-gulp.task("prepareTestsRelease", function() {
+gulp.task("prepareTestsRelease", ["checkLinter"], function() {
     return gulp.src(paths.testSrc)
         .pipe(concat("testRelease.min.js"))
         .pipe(uglify())
-        .pipe(gulp.dest("sln/obj/release/js"));
+        .pipe(gulp.dest("tests/release/js"));
 });
 
 gulp.task("testsRelease", ["prepareTestsRelease"], function(done) {
-    /*return gulp.src(paths.libs.concat(paths.libs, paths.testSrcRelease, paths.specs))
-        .pipe(karma({
-            configFile: "karma.release.js",
-            action: "run"
-        }));*/
     new KarmaServer({
-        configFile: "/karma.release.js",
+        configFile: __dirname + "/karma.release.js",
         singleRun: true
     }, done)
     .start();
@@ -158,9 +141,15 @@ gulp.task("testsRelease", ["prepareTestsRelease"], function(done) {
 
 gulp.task("release", function() {
     return gulp.src(paths.src)
-        .pipe(concat("mytodo.min.js"))
+        .pipe(sourcemaps.init())
         .pipe(uglify())
-        .pipe(gulp.dest("sln/bin/release/js"));
+        .pipe(concat("mytodo.min.js"))
+        .pipe(sourcemaps.write("./", {
+            sourceMappingURL: function(file) {
+                return file.relative + ".map";
+            }
+        }))
+        .pipe(gulp.dest("sln/scripts"));
 });
 
 gulp.task("buildRelease", ["testsRelease", "release"]);

@@ -1,0 +1,8 @@
+/Robymes.CDays16.Before/sln/styles
+/Robymes.CDays16.Before/sln/fonts
+/Robymes.CDays16.Before/sln/scripts
+/Robymes.CDays16.Before/.vscode/chrome
+node_modules
+bower_components
+release
+debug
