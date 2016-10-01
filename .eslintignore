@@ -1,0 +1,7 @@
+package.json
+bower.json
+node_modules/*
+bower_components/*
+.vscode/*
+obj/*.*
+bin/*.*
