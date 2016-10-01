@@ -1,8 +1,20 @@
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         basePath: "",
         frameworks: ["jasmine"],
-        exclude: [
+        files: [
+            {
+                pattern: "tests/debug/libs/*.js",
+                watched: false
+            },
+            {
+                pattern: "tests/debug/src/*.js",
+                watched: false
+            },
+            {
+                pattern: "tests/*_Specs.js",
+                watched: false
+            }
         ],
         reporters: ["progress", "html", "coverage"],
         htmlReporter: {
@@ -10,7 +22,7 @@ module.exports = function(config) {
             templatePath: __dirname + "/node_modules/karma-html-reporter/jasmine_template.html"
         },
         preprocessors: {
-            "obj/debug/js/testDebug.js": ["coverage"]
+            "tests/debug/src/*.js": ["coverage"]
         },
         coverageReporter: {
             type: "html",

@@ -37,6 +37,9 @@
     <div class="container">
         <div class="row show">
             <div class="col-md-8" id="todoListView" data-bind="with: toDoList">
+                <div class="alert alert-danger" role="alert" data-bind="css: { hidden: errorMessage() === ''}">
+                    <strong>ATTENZIONE: </strong><span data-bind="text: errorMessage"></span>
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">ToDo Items</div>
                     <table class="table table-striped">
@@ -49,6 +52,15 @@
                                 <th></th>
                             </tr>
                         </thead>
+                        <tbody data-bind="foreach: items">
+                            <tr>
+                                <td data-bind="text: $index"></td>
+                                <td data-bind="text: title"></td>
+                                <td data-bind="text: description"></td>
+                                <td data-bind="text: moment(dueDate).format('DD/MM/YYYY')"></td>
+                                <td></td>                                                                                                
+                            </tr>                            
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -61,12 +73,8 @@
             <p>&copy; RobyMes 2016</p>
         </footer>
     </div>   
-    <script type="text/javascript" src="scripts/jquery.min.js"></script>
-    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="scripts/json2.js"></script>
-    <script type="text/javascript" src="scripts/linq.min.js"></script>
-    <script type="text/javascript" src="scripts/knockout.js"></script>
-    <script type="text/javascript" src="scripts/mytodo.js"></script>         
+    <script type="text/javascript" src="scripts/libs.js"></script>    
+    <script type="text/javascript" src="scripts/mytodo.min.js"></script>         
 </body>
 
 </html>

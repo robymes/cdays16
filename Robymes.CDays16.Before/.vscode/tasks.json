@@ -11,20 +11,12 @@
 	"command": "gulp",
 	"isShellCommand": true,	
 	"tasks": [{
-			"taskName": "default",
+			"taskName": "build",			
 			"isBuildCommand": true,
 			"showOutput": "always"
 		}, {
-			"taskName": "copyRefs",
-			"isBuildCommand": true,
-			"showOutput": "always"
-		}, {
-			"taskName": "buildDebug",
-			"isBuildCommand": true,
-			"showOutput": "always"
-		}, {
-			"taskName": "buidRelease",
-			"isBuildCommand": true,
+			"taskName": "tests",
+			"isTestCommand": true,
 			"showOutput": "always"
 		}
 	]

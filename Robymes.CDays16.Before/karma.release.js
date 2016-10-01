@@ -1,8 +1,20 @@
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         basePath: "",
         frameworks: ["jasmine"],
-        exclude: [
+        files: [
+            {
+                pattern: "tests/release/libs/*.js",
+                watched: false
+            },
+            {
+                pattern: "tests/release/src/*.js",
+                watched: false
+            },
+            {
+                pattern: "tests/*_Specs.js",
+                watched: false
+            }
         ],
         reporters: ["progress", "html"],
         htmlReporter: {

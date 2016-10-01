@@ -2,10 +2,10 @@ var gulp = require("gulp"),
     concat = require("gulp-concat"),
     eslint = require("gulp-eslint"),
     uglify = require("gulp-uglify"),
+    clean = require("gulp-clean"),
     sourcemaps = require("gulp-sourcemaps"),
     KarmaServer = require("karma").Server,
     bowerMain = require("bower-main"),
-    del = require("del"),
     bowerMainJavaScriptFiles = bowerMain("js", "min.js"),
     bowerMainCssFiles = bowerMain("css", "min.css"),
     paths = {
@@ -13,97 +13,116 @@ var gulp = require("gulp"),
             ".eslintrc.json"
         ],
         libs: [
-            "sln/bin/release/js/jquery.min.js",
-            "sln/bin/release/js/linq.min.js",
-            "sln/bin/release/js/moment-with-locales.min.js",
-            "sln/bin/release/js/bootstrap.min.js"
+            "sln/obj/js/jquery.min.js",
+            "sln/obj/js/bootstrap.min.js",
+            "sln/obj/js/json2.js",
+            "sln/obj/js/moment-with-locales.min.js",
+            "sln/obj/js/linq.min.js",
+            "sln/obj/js/knockout.js"
         ],
         src: [
+            "sln/src/Utilities.js",
+            "sln/src/ApiService.js",
             "sln/src/ToDoListViewModel.js",
             "sln/src/App.js"
         ],
         testSrc: [
+            "sln/src/Utilities.js",
+            "sln/src/ApiService.js",
             "sln/src/ToDoListViewModel.js"
-        ],
-        testSrcDebug: [
-            "tests/debug/js/testDebug.js"
-        ],
-        testSrcRelease: [
-            "tests/release/js/testRelease.min.js"
-        ],
-        specs: [
-            "tests/*_Specs.js"
-        ],
-        srcDebug: [
-            "sln/scripts/mytodo.js"
-        ],
-        srcRelease: [
-            "sln/scripts/mytodo.min.js"
         ]
     };
 
-gulp.task("copyProdNotMinJs", function() {
+/*** REFERENCES ***/
+
+gulp.task("cleanRefs", function (callback) {
+    return gulp.src(["sln/obj", "sln/scripts", "sln/styles", "sln/fonts"], {read: false})
+        .pipe(clean());
+});
+
+gulp.task("selectNotMinLibs", ["cleanRefs"], function () {
     return gulp.src(bowerMainJavaScriptFiles.minifiedNotFound)
-        .pipe(gulp.dest("sln/scripts"));
+        .pipe(gulp.dest("sln/obj/js"));
 });
 
-gulp.task("copyProdJs", ["copyProdNotMinJs"], function() {
+gulp.task("selectMinLibs", ["selectNotMinLibs"], function () {
     return gulp.src(bowerMainJavaScriptFiles.minified)
+        .pipe(gulp.dest("sln/obj/js"));
+});
+
+gulp.task("copyLibs", ["selectMinLibs"], function () {
+    return gulp.src(paths.libs)
+        .pipe(concat("libs.js"))
         .pipe(gulp.dest("sln/scripts"));
 });
 
-gulp.task("copySourceMaps", function() {
+gulp.task("copyModernizr", ["copyLibs"], function () {
+    return gulp.src(["sln/obj/js/modernizr.js"])
+        .pipe(gulp.dest("sln/scripts"));
+});
+
+gulp.task("cleanObj", ["copyModernizr"], function (callback) {
+    return gulp.src(["sln/obj"], {read: false})
+        .pipe(clean());
+});
+
+gulp.task("copyLibsSourceMaps", ["cleanObj"], function () {
     return gulp.src(["bower_components/jquery/dist/*.map"])
         .pipe(gulp.dest("sln/scripts"));
 });
 
-gulp.task("copyJs", ["copyProdJs", "copySourceMaps"]);
-
-gulp.task("copyProdNotMinCss", function() {
+gulp.task("copyNotMinCss", ["copyLibsSourceMaps"], function () {
     return gulp.src(bowerMainCssFiles.minifiedNotFound)
         .pipe(gulp.dest("sln/styles"));
 });
 
-gulp.task("copyProdCss", ["copyProdNotMinCss"], function() {
+gulp.task("copyMinCss", ["copyNotMinCss"], function () {
     return gulp.src(bowerMainCssFiles.minified)
         .pipe(gulp.dest("sln/styles"));
 });
 
-gulp.task("copyCss", ["copyProdCss"]);
+gulp.task("copyCss", ["copyMinCss"]);
 
-gulp.task("copyFonts", function() {
+gulp.task("copyFonts", ["copyCss"], function () {
     return gulp.src(["bower_components/bootstrap/dist/fonts/*.*"])
         .pipe(gulp.dest("sln/fonts"));
 });
 
-gulp.task("clean", function(callback) {
-    del(["sln/scripts/**/*", "sln/styles/**/*", "sln/fonts/**/*"], {
-        force: true
-    }, callback);
-});
+gulp.task("copyRefs", ["copyFonts"]);
 
-gulp.task("copyRefs", ["clean", "copyJs", "copyCss", "copyFonts"]);
+/*** LINTER ***/
 
-gulp.task("checkLinter", function() {
+gulp.task("checkLinter", function () {
     return gulp.src(paths.src)
         .pipe(eslint(paths.eslintrc))
         .pipe(eslint.format())
         .pipe(eslint.failAfterError())
-        .on("error", function(error) {
+        .on("error", function (error) {
             console.error(String(error));
         });
 });
 
+/*** TEST DEBUG ***/
+
 //NOTA: vengono testati solo i sorgenti NON legati alla UI (HTML DOM)
 //per testare tutta la codebase è necessario condurre test di page automation
 
-gulp.task("prepareTestsDebug", ["checkLinter"], function() {
-    return gulp.src(paths.testSrc)
-        .pipe(concat("testDebug.js"))
-        .pipe(gulp.dest("tests/debug/js"));
+gulp.task("cleanTestsDebug", ["checkLinter"], function (callback) {
+    return gulp.src("tests/debug", {read: false})
+        .pipe(clean());
 });
 
-gulp.task("testsDebug", ["prepareTestsDebug"], function(done) {
+gulp.task("prepareTestsSrcDebug", ["cleanTestsDebug"], function () {
+    return gulp.src(paths.testSrc)
+        .pipe(gulp.dest("tests/debug/src"));
+});
+
+gulp.task("prepareTestsLibsDebug", ["prepareTestsSrcDebug"], function () {
+    return gulp.src(["sln/scripts/libs.js"])
+        .pipe(gulp.dest("tests/debug/libs"));
+});
+
+gulp.task("testsDebug", ["prepareTestsLibsDebug"], function (done) {
     new KarmaServer({
         configFile: __dirname + "/karma.debug.js",
         singleRun: true
@@ -111,25 +130,24 @@ gulp.task("testsDebug", ["prepareTestsDebug"], function(done) {
     .start();
 });
 
-//Creazione del file sorgente di debug, utile per il debug step-by-step
-//con i devtools del browser
+/*** TEST RELEASE ***/
 
-gulp.task("debug", function() {
-    return gulp.src(paths.src)
-        .pipe(concat("mytodo.js"))
-        .pipe(gulp.dest("sln/scripts"));
+gulp.task("cleanTestsRelease", ["checkLinter"], function (callback) {
+    return gulp.src("tests/release", {read: false})
+        .pipe(clean());
 });
 
-gulp.task("buildDebug", ["testsDebug", "debug"]);
-
-gulp.task("prepareTestsRelease", ["checkLinter"], function() {
+gulp.task("prepareTestsSrcRelease", ["cleanTestsRelease"], function () {
     return gulp.src(paths.testSrc)
-        .pipe(concat("testRelease.min.js"))
-        .pipe(uglify())
-        .pipe(gulp.dest("tests/release/js"));
+        .pipe(gulp.dest("tests/release/src"));
 });
 
-gulp.task("testsRelease", ["prepareTestsRelease"], function(done) {
+gulp.task("prepareTestsLibsRelease", ["prepareTestsSrcRelease"], function () {
+    return gulp.src(["sln/scripts/libs.js"])
+        .pipe(gulp.dest("tests/release/libs"));
+});
+
+gulp.task("testsRelease", ["prepareTestsLibsRelease"], function (done) {
     new KarmaServer({
         configFile: __dirname + "/karma.release.js",
         singleRun: true
@@ -137,22 +155,28 @@ gulp.task("testsRelease", ["prepareTestsRelease"], function(done) {
     .start();
 });
 
-//Creazione del file sorgente di release minificato
+gulp.task("tests", ["testsDebug", "testsRelease"]);
 
-gulp.task("release", function() {
+/*** BUILD ***/
+
+gulp.task("buildDebug", ["checkLinter"], function () {
+    return gulp.src(paths.src)
+        .pipe(concat("mytodo.js"))
+        .pipe(gulp.dest("sln/scripts"));
+});
+
+gulp.task("buildRelease", ["checkLinter"], function () {
     return gulp.src(paths.src)
         .pipe(sourcemaps.init())
         .pipe(uglify())
         .pipe(concat("mytodo.min.js"))
         .pipe(sourcemaps.write("./", {
-            sourceMappingURL: function(file) {
+            sourceMappingURL: function (file) {
                 return file.relative + ".map";
             }
         }))
         .pipe(gulp.dest("sln/scripts"));
 });
-
-gulp.task("buildRelease", ["testsRelease", "release"]);
 
 gulp.task("build", ["buildDebug", "buildRelease"]);
 
