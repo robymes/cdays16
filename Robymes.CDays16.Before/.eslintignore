@@ -3,8 +3,8 @@ bower.json
 node_modules/*
 bower_components/*
 .vscode/*
-obj/*.*
-bin/*.*
+sln/obj/*.*
+sln/bin/*.*
 tests/debug/*
 tests/release/*
 *.min.js

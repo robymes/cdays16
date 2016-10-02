@@ -92,7 +92,7 @@ gulp.task("copyRefs", ["copyFonts"]);
 
 /*** LINTER ***/
 
-gulp.task("checkLinter", function () {
+gulp.task("jsLint", function () {
     return gulp.src(paths.src)
         .pipe(eslint(paths.eslintrc))
         .pipe(eslint.format())
@@ -107,7 +107,7 @@ gulp.task("checkLinter", function () {
 //NOTA: vengono testati solo i sorgenti NON legati alla UI (HTML DOM)
 //per testare tutta la codebase è necessario condurre test di page automation
 
-gulp.task("cleanTestsDebug", ["checkLinter"], function (callback) {
+gulp.task("cleanTestsDebug", ["jsLint"], function (callback) {
     return gulp.src("tests/debug", {read: false})
         .pipe(clean());
 });
@@ -132,12 +132,12 @@ gulp.task("testsDebug", ["prepareTestsLibsDebug"], function (done) {
 
 /*** TEST RELEASE ***/
 
-gulp.task("cleanTestsRelease", ["checkLinter"], function (callback) {
+gulp.task("cleanTestsRelease", ["jsLint"], function (callback) {
     return gulp.src("tests/release", {read: false})
         .pipe(clean());
 });
 
-gulp.task("prepareTestsSrcRelease", ["cleanTestsRelease"], function () {
+gulp.task("prepareTestsSrcRelease", ["jsLint"], function () {
     return gulp.src(paths.testSrc)
         .pipe(gulp.dest("tests/release/src"));
 });
@@ -159,13 +159,13 @@ gulp.task("tests", ["testsDebug", "testsRelease"]);
 
 /*** BUILD ***/
 
-gulp.task("buildDebug", ["checkLinter"], function () {
+gulp.task("buildDebug", ["jsLint"], function () {
     return gulp.src(paths.src)
         .pipe(concat("mytodo.js"))
         .pipe(gulp.dest("sln/scripts"));
 });
 
-gulp.task("buildRelease", ["checkLinter"], function () {
+gulp.task("buildRelease", ["jsLint"], function () {
     return gulp.src(paths.src)
         .pipe(sourcemaps.init())
         .pipe(uglify())
