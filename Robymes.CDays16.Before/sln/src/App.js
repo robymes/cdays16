@@ -1,8 +1,11 @@
 this.cdays16 = (function (cdays16) {
     jQuery(document).ready(function () {
         var apiService = new cdays16.ApiService(),
-            toDoListViewModel = new cdays16.ToDoListViewModel(apiService);
-        ko.applyBindings(toDoListViewModel, document.getElementById("toDoList"));
-        toDoListViewModel.init();
+            viewModel = {
+                toDoList: new cdays16.ToDoListViewModel(apiService)
+            };
+        ko.applyBindings(viewModel);
+        viewModel.toDoList.init();
     });
+    return cdays16;
 }(this.cdays16 || {}));
