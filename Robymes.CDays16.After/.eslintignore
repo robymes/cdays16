@@ -1,0 +1,10 @@
+package.json
+bower.json
+node_modules/*
+bower_components/*
+.vscode/*
+sln/obj/*.*
+sln/bin/*.*
+tests/debug/*
+tests/release/*
+*.min.js

@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "sourceMap": true,
+        "module": "commonjs",
+        "allowJs": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "declaration": false,
+        "outDir": "sln/obj/ts"
+    },
+    "files": [
+        "sln/src/NewToDoItemViewModel.ts",
+        "sln/src/ViewModel.ts",
+        "sln/src/App.ts"
+    ],
+    "include": [
+        "sln/src/**/*",
+        "typings/tsd.d.ts"
+    ]
+}

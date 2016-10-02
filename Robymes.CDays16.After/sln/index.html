@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>My ToDo</title>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap-theme.min.css">
+    <script type="text/javascript" src="scripts/modernizr.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">My ToDo</a>
+            </div>
+        </div>
+    </nav>
+    <div class="jumbotron">
+        <div class="container">
+            <h1>My ToDo</h1>
+            <p>A Todo sample application</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row show">
+            <div class="col-md-8" data-bind="with: toDoList">
+                <div class="alert alert-danger" role="alert" data-bind="css: { hidden: errorMessage() === ''}">
+                    <strong>ATTENZIONE: </strong><span data-bind="text: errorMessage"></span>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">ToDo Items</div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: items">
+                            <tr>
+                                <td data-bind="text: $index"></td>
+                                <td data-bind="text: title"></td>
+                                <td data-bind="text: description"></td>
+                                <td data-bind="text: moment(dueDate).format('DD/MM/YYYY')"></td>
+                                <td></td>                                                                                                
+                            </tr>                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4" data-bind="with: newToDoItem">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">New ToDo Item</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div role="form">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" class="form-control" placeholder="Enter ToDo title" data-bind="textInput: title">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" placeholder="Enter ToDo description" data-bind="textInput: description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" placeholder="Enter Due Date" data-bind="datepicker: dueDate">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                </div>
+                                <div class="alert alert-danger hidden" role="alert" style="margin-top: 5px;"><small><strong>Invalid Date!</strong></small></div>
+                            </div>
+                            <button type="submit" class="btn btn-default" data-bind="enable: canInsertNewItem">Add ToDo Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <hr>
+        <footer>
+            <p>&copy; RobyMes 2016</p>
+        </footer>
+    </div>   
+    <script type="text/javascript" src="scripts/libs.js"></script>  
+    <script type="text/javascript" src="scripts/mytodo.min.js"></script>  
+    <script type="text/javascript" src="scripts/bundle.js"></script>                 
+</body>
+
+</html>

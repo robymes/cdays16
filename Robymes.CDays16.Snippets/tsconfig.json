@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "outDir": "bin"
+    },
+    "files": [
+        "src/IFoo.ts",
+        "src/Foo.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "bower_components"
+    ],
+    "include": [
+        "src/**/*",
+        "typings/tsd.d.ts"
+    ]
+}
