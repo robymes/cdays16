@@ -1,6 +1,6 @@
-sln/styles
-sln/fonts
-sln/scripts
+styles
+fonts
+scripts
 .vscode/chrome
 bin
 typings
