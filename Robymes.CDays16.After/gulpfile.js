@@ -185,7 +185,7 @@ gulp.task("testsDebug", ["prepareTestsLibsDebug"], function (done) {
 
 /*** TEST RELEASE ***/
 
-gulp.task("cleanTestsRelease", ["checkLinter"], function (callback) {
+gulp.task("cleanTestsRelease", ["jsLint"], function (callback) {
     return gulp.src("tests/release", {read: false})
         .pipe(clean());
 });
