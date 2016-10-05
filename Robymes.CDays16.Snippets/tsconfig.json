@@ -7,17 +7,19 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "outDir": "bin"
+        //"outFile": "bin/total.js"
     },
     "files": [
-        "src/IFoo.ts",
-        "src/Foo.ts"
+        "src/IMyInterface.ts",
+        "src/MyClass.ts",
+        "src/Test.ts"
     ],
     "exclude": [
         "node_modules",
         "bower_components"
     ],
-    "include": [
-        "src/**/*",
+    "inlcude": [
+        "src/*.ts",
         "typings/tsd.d.ts"
     ]
 }
