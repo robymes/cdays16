@@ -1,5 +1,5 @@
 this.cdays16 = (function (cdays16) {
-    cdays16.ToDoListViewModel = function (apiService) {
+    var ctor = function (apiService) {
         var self = this;
 
         self.items = ko.observableArray([]);
@@ -16,6 +16,9 @@ this.cdays16 = (function (cdays16) {
                     self.errorMessage("ATTENZIONE: errore durante il caricamento della lista.");
                 });
         };
+    };
+    cdays16.ToDoListViewModel = function (apiService) {
+        return new ctor(apiService);
     };
     return cdays16;
 }(this.cdays16 || {}));

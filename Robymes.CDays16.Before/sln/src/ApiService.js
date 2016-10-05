@@ -1,5 +1,5 @@
 this.cdays16 = (function (cdays16) {
-    cdays16.ApiService = function () {
+    var ctor = function () {
         var self =this;
 
         self.loadTodoItems = function () {
@@ -29,6 +29,9 @@ this.cdays16 = (function (cdays16) {
                 .toArray();
             return jQuery.ajax(items);
         };
+    };
+    cdays16.ApiService = function (apiService) {
+        return new ctor(apiService);
     };
     return cdays16;
 }(this.cdays16 || {}));

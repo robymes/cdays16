@@ -1,4 +1,4 @@
-describe("Data il viewmodel della lista di item", function () {
+describe("Dato il viewmodel della lista di item", function () {
     var apiService,
         toDoListViewModel;
 
