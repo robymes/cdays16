@@ -1,2 +1,3 @@
-# cdays16
-Demo Community Days 2016
+# Demo Community Days 2016
+
+Sessione: Da JavaScript a TypeScript
