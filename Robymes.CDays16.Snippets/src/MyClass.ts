@@ -1,7 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 /// <reference path="./IMyInterface.ts" />
 
-
 namespace cdays16 {
     export class MyClass implements IMyInterface<number> {
         static myStaticProperty: any;

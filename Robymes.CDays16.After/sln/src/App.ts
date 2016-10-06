@@ -1,5 +1,5 @@
-/// <reference path="jsDefs.d.ts" />
-import * as ntdi from "./NewToDoItemViewModel";
+/// <reference path="jsDecs.d.ts" />
+
 import * as vm from "./ViewModel";
 
 export class App {

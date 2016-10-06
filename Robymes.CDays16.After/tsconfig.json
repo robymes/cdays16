@@ -16,7 +16,7 @@
         "sln/src/App.ts"
     ],
     "include": [
-        "sln/src/**/*",
+        "sln/src/*.ts",
         "typings/tsd.d.ts"
     ]
 }

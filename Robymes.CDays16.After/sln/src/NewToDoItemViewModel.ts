@@ -1,11 +1,15 @@
+/// <reference path="jsDecs.d.ts" />
+
 export class NewToDoItemViewModel {
+    private apiService: cdays16.ApiService;
     private incorrectDueDate: KnockoutComputed<Boolean>;
     title: KnockoutObservable<string>;
     description: KnockoutObservable<string>;
     dueDate: KnockoutObservable<moment.Moment>;
     canInsertNewItem: KnockoutComputed<Boolean>;
 
-    constructor() {
+    constructor(apiService: cdays16.ApiService) {
+        this.apiService = apiService;
         this.title = ko.observable("");
         this.description = ko.observable("");
         this.dueDate = ko.observable(moment().add(1, "d"));

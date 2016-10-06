@@ -1,13 +1,14 @@
-/// <reference path="jsDefs.d.ts" />
-import * as n from "./NewToDoItemViewModel";
+/// <reference path="jsDecs.d.ts" />
+
+import * as ref from "./NewToDoItemViewModel";
 
 export class ViewModel {
     toDoList: cdays16.ToDoListViewModel;
-    newToDoItem: n.NewToDoItemViewModel;
+    newToDoItem: ref.NewToDoItemViewModel;
 
     constructor(apiService: cdays16.ApiService) {
         this.toDoList = cdays16.ToDoListViewModel(apiService);
-        this.newToDoItem = new n.NewToDoItemViewModel();
+        this.newToDoItem = new ref.NewToDoItemViewModel(apiService);
     }
 
     init() {
